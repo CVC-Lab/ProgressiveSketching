@@ -337,6 +337,7 @@ tmp = np.moveaxis(A,2,0) # 2 0 1
 A2 = tmp.reshape(tmp.shape[0],tmp.shape[1]*tmp.shape[2])
 
 for it in tqdm(range(100)):
+    np.random.seed(it)
     logPS_0, logPS_1, logPS_2 = pgskt_log(A,r,10,10,500)
     logRS_0, logRS_1, logRS_2 = rdskt_log(A,r,10,10,500)
     err_logPS, memory_logPS = lc(N,logPS_0, logPS_1, logPS_2, 'progressive')
