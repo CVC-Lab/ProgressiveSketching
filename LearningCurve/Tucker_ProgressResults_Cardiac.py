@@ -48,7 +48,7 @@ def update_z(index,N):
     
 def pgskt_log(A,r,start,step,stop):
     N = np.array(A.shape)
-    m = np.array([start,start,start],dtype=np.int)
+    m = np.array([start,start,start],dtype=int)
     params = [1,1,1]
     
     # inital core uniform sampling
@@ -70,7 +70,7 @@ def pgskt_log(A,r,start,step,stop):
     z_2 = linear(index_2,score_2,N[2])
     
     while np.sum(m) < stop:
-        theta = np.array(dirichlet(params,1)[0] * step,dtype=np.int)
+        theta = np.array(dirichlet(params,1)[0] * step,dtype=int)
         
         if z_0 is not None:
             if np.sum(z_0>0) > theta[0]:
@@ -119,12 +119,12 @@ def pgskt_log(A,r,start,step,stop):
     
 def rdskt_log(A,r,start,step,stop):
     N = np.array(A.shape)
-    m = np.array([start,start,start],dtype=np.int)
+    m = np.array([start,start,start],dtype=int)
     step = int((stop - start)/step)
-    M = np.array(dirichlet([1,1,1],1)[0] * stop,dtype=np.int)
+    M = np.array(dirichlet([1,1,1],1)[0] * stop,dtype=int)
     # checking impossible sampling ratio
     while (M[0] > N[0]) or (M[1] > N[1]) or (M[2] > N[2]):
-        M = np.array(dirichlet([1,1,1],1)[0] * stop,dtype=np.int)
+        M = np.array(dirichlet([1,1,1],1)[0] * stop,dtype=int)
     Theta = np.linspace(m,M,step)
     
     # inital core uniform sampling
@@ -219,8 +219,8 @@ def lc(N, logPS_0, logPS_1, logPS_2, mode):
             fibers_1 = choice(N[2]*N[0],m[2]*m[0],replace=False)
             fibers_2 = choice(N[0]*N[1],m[0]*m[1],replace=False)
 
-        k = np.array(r + (m-r)/3,dtype=np.int) 
-        s = np.array(r + 2*(m-r)/3,dtype=np.int)
+        k = np.array(r + (m-r)/3,dtype=int) 
+        s = np.array(r + 2*(m-r)/3,dtype=int)
 
         Map0_T = normal(size=(len(fibers_0),k[0]))
         Map1_T = normal(size=(len(fibers_1),k[1]))
@@ -280,8 +280,8 @@ def Ahat(N, index_0, index_1, index_2):
     fibers_1 = (x1 + y1*N[0]).reshape(-1)
     fibers_2 = (x2 + y2*N[1]).reshape(-1)
 
-    k = np.array(r + (m-r)/3,dtype=np.int) 
-    s = np.array(r + 2*(m-r)/3,dtype=np.int)
+    k = np.array(r + (m-r)/3,dtype=int) 
+    s = np.array(r + 2*(m-r)/3,dtype=int)
 
     Map0_T = normal(size=(len(fibers_0),k[0]))
     Map1_T = normal(size=(len(fibers_1),k[1]))
