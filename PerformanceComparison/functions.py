@@ -368,7 +368,7 @@ def R_SCTT(A,rank,p):
     G = []
     C = A
     for k in range(1,d):
-        C = C.reshape((np.int(r[k-1]*A.shape[k-1]),np.int(C.size/r[k-1]/A.shape[k-1])),order='F')
+        C = C.reshape((int(r[k-1]*A.shape[k-1]),int(C.size/r[k-1]/A.shape[k-1])),order='F')
         U, s, VT, _, _ = SCSVD(C, rank[k-1], p, p)
         r.append(rank[k-1])
         U = U[:, :r[k]]
@@ -411,7 +411,7 @@ def update_z(index,N):
         
 def pgSketchyCoreTucker(A,A0,A1,A2,r,start,step,stop):
     N = np.array(A.shape)
-    m = np.array([start,start,start],dtype=np.int)
+    m = np.array([start,start,start],dtype=int)
     params = [1,1,1]
     
     # computation time log
@@ -433,7 +433,7 @@ def pgSketchyCoreTucker(A,A0,A1,A2,r,start,step,stop):
     z_2 = linear(index_2,score_2,N[2])
     
     while np.sum(m) < stop:
-        theta = np.array(dirichlet(params,1)[0] * step,dtype=np.int)
+        theta = np.array(dirichlet(params,1)[0] * step,dtype=int)
         
         if z_0 is not None:
             if np.sum(z_0>0) > theta[0]:
@@ -482,8 +482,8 @@ def pgSketchyCoreTucker(A,A0,A1,A2,r,start,step,stop):
     fibers_1 = (x1 + y1*N[0]).reshape(-1)
     fibers_2 = (x2 + y2*N[1]).reshape(-1)
     
-    k = np.array(r + (m-r)/3,dtype=np.int) 
-    s = np.array(r + 2*(m-r)/3,dtype=np.int)
+    k = np.array(r + (m-r)/3,dtype=int) 
+    s = np.array(r + 2*(m-r)/3,dtype=int)
     
     Map0_T = normal(size=(len(fibers_0),k[0]))
     Map1_T = normal(size=(len(fibers_1),k[1]))
@@ -528,12 +528,12 @@ def pgSketchyCoreTucker(A,A0,A1,A2,r,start,step,stop):
     
 def Random_SketchyCoreTucker(A,A0,A1,A2,r,M):
     N = np.array(A.shape)
-    m = np.array(dirichlet([1,1,1],1)[0] * M,dtype=np.int)
+    m = np.array(dirichlet([1,1,1],1)[0] * M,dtype=int)
     # checking impossible sampling ratio
     while (m[0] > N[0]) or (m[1] > N[1]) or (m[2] > N[2]):
-        m = np.array(dirichlet([1,1,1],1)[0] * M,dtype=np.int)
-    k = np.array(r + (m-r)/3,dtype=np.int) 
-    s = np.array(r + 2*(m-r)/3,dtype=np.int)
+        m = np.array(dirichlet([1,1,1],1)[0] * M,dtype=int)
+    k = np.array(r + (m-r)/3,dtype=int) 
+    s = np.array(r + 2*(m-r)/3,dtype=int)
     
     # computation time log
     start_time = time.time()
@@ -590,7 +590,7 @@ def Random_SketchyCoreTucker(A,A0,A1,A2,r,M):
     
 def pgskt_log(A,A0,A1,A2,r,start,step,stop):
     N = np.array(A.shape)
-    m = np.array([start,start,start],dtype=np.int)
+    m = np.array([start,start,start],dtype=int)
     params = [1,1,1]
     
     # inital core uniform sampling
@@ -612,7 +612,7 @@ def pgskt_log(A,A0,A1,A2,r,start,step,stop):
     z_2 = linear(index_2,score_2,N[2])
     
     while np.sum(m) < stop:
-        theta = np.array(dirichlet(params,1)[0] * step,dtype=np.int)
+        theta = np.array(dirichlet(params,1)[0] * step,dtype=int)
         
         if z_0 is not None:
             if np.sum(z_0>0) > theta[0]:
@@ -661,7 +661,7 @@ def pgskt_log(A,A0,A1,A2,r,start,step,stop):
     
 def rdskt_log(A,A0,A1,A2,r,start,step,stop):
     N = np.array(A.shape)
-    m = np.array([start,start,start],dtype=np.int)
+    m = np.array([start,start,start],dtype=int)
     params = [1,1,1]
       
     # inital core uniform sampling
@@ -686,7 +686,7 @@ def rdskt_log(A,A0,A1,A2,r,start,step,stop):
     z_2 = z_2/np.sum(z_2)
     
     while np.sum(m) < stop:
-        theta = np.array(dirichlet(params,1)[0] * step,dtype=np.int)
+        theta = np.array(dirichlet(params,1)[0] * step,dtype=int)
 
         if z_0 is not None:
             if np.sum(z_0>0) > theta[0]:
@@ -750,8 +750,8 @@ def lc(N,A,A0,A1,A2,r,logPS_0,logPS_1,logPS_2,mode):
             fibers_1 = choice(N[2]*N[0],m[2]*m[0],replace=False)
             fibers_2 = choice(N[0]*N[1],m[0]*m[1],replace=False)
 
-        k = np.array(r + (m-r)/3,dtype=np.int) 
-        s = np.array(r + 2*(m-r)/3,dtype=np.int)
+        k = np.array(r + (m-r)/3,dtype=int) 
+        s = np.array(r + 2*(m-r)/3,dtype=int)
 
         Map0_T = normal(size=(len(fibers_0),k[0]))
         Map1_T = normal(size=(len(fibers_1),k[1]))
@@ -805,8 +805,8 @@ def Ahat(N,A,A0,A1,A2,r,index_0,index_1,index_2):
     fibers_1 = (x1 + y1*N[0]).reshape(-1)
     fibers_2 = (x2 + y2*N[1]).reshape(-1)
 
-    k = np.array(r + (m-r)/3,dtype=np.int) 
-    s = np.array(r + 2*(m-r)/3,dtype=np.int)
+    k = np.array(r + (m-r)/3,dtype=int) 
+    s = np.array(r + 2*(m-r)/3,dtype=int)
 
     Map0_T = normal(size=(len(fibers_0),k[0]))
     Map1_T = normal(size=(len(fibers_1),k[1]))
