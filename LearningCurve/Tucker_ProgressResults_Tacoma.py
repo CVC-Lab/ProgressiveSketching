@@ -12,6 +12,8 @@ from tqdm import tqdm
 import warnings
 warnings.filterwarnings('ignore')
 
+import cv2
+from moviepy.editor import VideoFileClip
 #################################################################################
 def HOSVD(A):
     A1 = A.reshape(A.shape[0],A.shape[1]*A.shape[2]) # 1 2 3
@@ -153,11 +155,11 @@ def rdskt_log(A,r,start,step,stop):
         Theta[i+1] += remainder
         diff = Theta[i+1] - Theta[i]
         remainder = diff - diff.astype(int)
-        theta = diff.astype(int)
+        theta = np.maximum(diff.astype(int), 0)
         
         if z_0 is not None:
             if np.sum(z_0>0) > theta[0]:
-                add = theta[0]
+                add = max(theta[0], 0)
             else:
                 add = np.sum(z_0>0)
             m[0] += add
@@ -170,7 +172,7 @@ def rdskt_log(A,r,start,step,stop):
             
         if z_1 is not None:
             if np.sum(z_1>0) > theta[1]:
-                add = theta[1]
+                add = max(theta[1], 0)
             else:
                 add = np.sum(z_1>0)
             m[1] += add
@@ -183,7 +185,7 @@ def rdskt_log(A,r,start,step,stop):
 
         if z_2 is not None:
             if np.sum(z_2>0) > theta[2]:
-                add = theta[2]
+                add = max(theta[2], 0)
             else:
                 add = np.sum(z_2>0)
             m[2] += add
@@ -340,6 +342,7 @@ A = np.array(frames)  # Shape: (num_frames, H, W)
 A = A.astype(np.float32)
 A = A - A.mean(axis=2, keepdims=True)
 A = np.transpose(A, (1,2,0))
+N = np.array(A.shape)
 r = np.array([40,65,28])
 
 # matrix unfoldings
@@ -351,8 +354,8 @@ A2 = tmp.reshape(tmp.shape[0],tmp.shape[1]*tmp.shape[2])
 
 for it in tqdm(range(100)):
     np.random.seed(it)
-    logPS_0, logPS_1, logPS_2 = pgskt_log(A,r,10,10,500)
-    logRS_0, logRS_1, logRS_2 = rdskt_log(A,r,10,10,500)
+    logPS_0, logPS_1, logPS_2 = pgskt_log(A,r,30,30,600)
+    logRS_0, logRS_1, logRS_2 = rdskt_log(A,r,30,30,600)
     err_logPS, memory_logPS = lc(N,logPS_0, logPS_1, logPS_2, 'progressive')
     err_logRS, memory_logRS = lc(N,logRS_0, logRS_1, logRS_2, 'random')
     nf_PS = [len(i)+len(j)+len(k) for i,j,k in zip(logPS_0,logPS_1,logPS_2)]
